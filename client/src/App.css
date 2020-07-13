@@ -1,0 +1,139 @@
+/* ================== */
+/* HOUSEKEEPING */
+/* ================== */
+
+:root {
+    --black: #0c1713;
+    --off-white: #fdfdec;
+    --white: white;
+    --accent: #830a48;
+    --accent-bright: #ab0d5e;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--off-white);
+    color: var(--black);
+    font-family: "Josefin Sans", sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Josefin Slab", serif;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+a {
+    text-decoration: none;
+}
+
+p {
+    margin: 0;
+}
+
+hr {
+    margin: 25px 0;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+button {
+    padding: 10px;
+    margin: 20px auto;
+    background-color: var(--accent);
+    color: var(--white);
+    font-weight: bold;
+    border: none;
+    border-radius: 2px;
+    width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+button:hover {
+    background-color: var(--accent-bright);
+}
+
+/* ================== */
+/* MAIN APP */
+/* ================== */
+
+div#root {
+    min-height: 100vh;
+}
+
+div.app {
+    max-width: 992px;
+    margin: auto;
+    padding: 20px 10px;
+}
+
+div.header a div.logoContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+div.header a img.logo {
+    width: 50px;
+}
+
+div.header a h1 {
+    color: var(--black);
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+div.home form.form {
+    display: flex;
+    flex-direction: column;
+}
+
+div.home form.form > input {
+    margin: 10px 0;
+}
+
+div.view {
+    display: flex;
+    flex-direction: column;
+}
+
+div.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    background-color: var(--black);
+    color: var(--white);
+}
+
+div.footer p a {
+    text-decoration: underline;
+    color: var(--white);
+}
