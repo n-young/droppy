@@ -1,0 +1,26 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["Nick Young <youngnicholas228@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bson = "1.0.0"
+rand = "0.6"
+rocket = "0.4.5"
+rocket-multipart-form-data = "0.9.3"
+rust-s3 = "0.11.0"
+serde = "1.0.114"
+tokio = { "version"= "0.2", features= [ "rt-threaded", "macros" ] }
+
+[dependencies.mongodb]
+version = "1.0.0"
+default-features = false
+features = ["sync"]
+
+[dependencies.rocket_contrib]
+version = "0.4.5"
+default-features = false
+features = ["json"]
