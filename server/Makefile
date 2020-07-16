@@ -2,7 +2,7 @@ build:
 	gcloud builds submit \
 		--quiet \
 		--tag gcr.io/droppy-283501/api \
-		--timeout="1500"
+		--timeout="2500"
 
 deploy:
 	gcloud beta run deploy api \

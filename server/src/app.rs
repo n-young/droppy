@@ -68,7 +68,7 @@ fn download(id: String) -> rocket::response::Response<'static> {
 
 #[rocket::post("/create", data = "<data>")]
 fn create(content_type: &ContentType, data: Data) -> CORSHeaderJson {
-    // Set the form format TODO: Check size limit
+    // Set the form format
     let options = MultipartFormDataOptions::with_multipart_form_data_fields(vec![
         MultipartFormDataField::file("file")
             .content_type_by_string(Some(mime::STAR_STAR))
