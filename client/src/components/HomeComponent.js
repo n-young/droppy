@@ -1,9 +1,26 @@
 import React from "react";
-const axios = require("axios");
 
 const HomeComponent = props => {
     const handleSubmit = e => {
-        axios.post("http://localhost:8000/create");
+        e.preventDefault();
+        var data = new FormData();
+        var filedata = document.querySelector('input[type="file"]').files[0];
+        var note = document.querySelector("textarea").value;
+        data.append("file", filedata, filedata.name);
+        data.append("note", note);
+
+        fetch("http://localhost:8000/create", {
+            method: "POST",
+            body: data,
+            headers: {
+                Accept: "application/json",
+            },
+        }).then(res => {
+            res.json().then(data => {
+                let id = data.id.substring(1, data.id.length - 1);
+                props.history.push(`/view/${id}`);
+            });
+        });
     };
 
     return (
@@ -16,12 +33,7 @@ const HomeComponent = props => {
             </p>
             <hr />
             <h2>Upload a File</h2>
-            <form
-                className="form"
-                action="http://localhost:8000/create"
-                method="POST"
-                enctype="multipart/form-data"
-            >
+            <form className="form" onSubmit={handleSubmit}>
                 <input type="file" name="file" />
                 <label for="note">Note: </label>
                 <textarea rows="10" name="note" />

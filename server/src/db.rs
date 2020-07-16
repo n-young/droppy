@@ -1,3 +1,4 @@
+use dotenv;
 use mongodb::sync::Client;
 use serde::Serialize;
 
@@ -5,15 +6,33 @@ use serde::Serialize;
 pub struct FileStruct {
     pub id: String,
     pub filename: String,
+    pub filetype: String,
     pub note: String,
 }
 
-pub fn insert_file(id: &str, filename: &str, note: &str) -> FileStruct {
-    let client = Client::with_uri_str("mongodb+srv://nyoung:adCwurizymP7Ljg7@droppy.5ko1h.mongodb.net/droppy?retryWrites=true&w=majority").unwrap();
-    let collection = client.database("droppy").collection("files");
+fn get_collection() -> mongodb::sync::Collection {
+    let client = Client::with_uri_str(&dotenv::var("MONGO_URI").unwrap()).unwrap();
+    client.database("droppy").collection("files")
+}
+
+pub fn get_file_metadata(id: &str) -> FileStruct {
+    let collection = get_collection();
+    let object = doc! {"_id": id};
+    let result = collection.find_one(object, None).unwrap().unwrap();
+    FileStruct {
+        id: result.get("_id").unwrap().to_string(),
+        filename: result.get("filename").unwrap().to_string(),
+        filetype: result.get("filetype").unwrap().to_string(),
+        note: result.get("note").unwrap().to_string(),
+    }
+}
+
+pub fn insert_file(id: &str, filename: &str, filetype: &str, note: &str) -> FileStruct {
+    let collection = get_collection();
     let object = doc! {
         "_id": id,
         "filename": filename,
+        "filetype": filetype,
         "note": note,
     };
     collection.insert_one(object, None).unwrap();
@@ -22,22 +41,9 @@ pub fn insert_file(id: &str, filename: &str, note: &str) -> FileStruct {
 }
 
 pub fn delete_file(id: &str) -> FileStruct {
-    let client = Client::with_uri_str("mongodb+srv://nyoung:adCwurizymP7Ljg7@droppy.5ko1h.mongodb.net/droppy?retryWrites=true&w=majority").unwrap();
-    let collection = client.database("droppy").collection("files");
+    let collection = get_collection();
     let object = doc! {"_id": id};
     let metadata = get_file_metadata(id);
     collection.delete_one(object, None).unwrap();
     metadata
-}
-
-pub fn get_file_metadata(id: &str) -> FileStruct {
-    let client = Client::with_uri_str("mongodb+srv://nyoung:adCwurizymP7Ljg7@droppy.5ko1h.mongodb.net/droppy?retryWrites=true&w=majority").unwrap();
-    let collection = client.database("droppy").collection("files");
-    let object = doc! {"_id": id};
-    let result = collection.find_one(object, None).unwrap().unwrap();
-    FileStruct {
-        id: result.get("_id").unwrap().to_string(),
-        filename: result.get("filename").unwrap().to_string(),
-        note: result.get("note").unwrap().to_string(),
-    }
 }

@@ -1,54 +1,39 @@
+use dotenv;
 use s3::bucket::Bucket;
 use s3::credentials::Credentials;
 use std::fs;
 
-pub fn put_file(path: &str, filename: &str, filetype: &str) {
-    // Set up config
-    let bucket_name = "n-young-droppy";
-    let aws_access = "AKIAINQNB6HMBIRCCQHQ";
-    let aws_secret = "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";
-    let region = "us-east-2".parse().unwrap();
-    let credentials: Credentials = Credentials::new(
-        Some(aws_access.to_string()),
-        Some(aws_secret.to_string()),
-        None,
-        None,
-    );
-    let bucket = Bucket::new(bucket_name, region, credentials);
+struct S3Config {
+    bucket_name: String,
+    aws_access: String,
+    aws_secret: String,
+    region: s3::region::Region,
+}
 
-    // Read and put file
+fn get_bucket() -> s3::bucket::Bucket {
+    let config = S3Config {
+        bucket_name: "n-young-droppy".to_string(),
+        aws_access: dotenv::var("AWS_ACCESS").unwrap(),
+        aws_secret: dotenv::var("AWS_SECRET").unwrap(),
+        region: "us-east-2".parse().unwrap(),
+    };
+    let credentials: Credentials =
+        Credentials::new(Some(config.aws_access), Some(config.aws_secret), None, None);
+    Bucket::new(&config.bucket_name, config.region, credentials)
+}
+
+pub fn put_file(path: &str, filename: &str, filetype: &str) {
+    let bucket = get_bucket();
     let file: Vec<u8> = fs::read(path).unwrap();
     bucket.put(filename, &file, filetype).unwrap();
 }
 
 pub fn get_file(key: &str) -> (std::vec::Vec<u8>, u32) {
-    // Set up config
-    let bucket_name = "n-young-droppy";
-    let aws_access = "AKIAINQNB6HMBIRCCQHQ";
-    let aws_secret = "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";
-    let region = "us-east-2".parse().unwrap();
-    let credentials: Credentials = Credentials::new(
-        Some(aws_access.to_string()),
-        Some(aws_secret.to_string()),
-        None,
-        None,
-    );
-    let bucket = Bucket::new(bucket_name, region, credentials);
+    let bucket = get_bucket();
     bucket.get(key).unwrap()
 }
 
 pub fn delete_file(key: &str) {
-    // Set up config
-    let bucket_name = "n-young-droppy";
-    let aws_access = "AKIAINQNB6HMBIRCCQHQ";
-    let aws_secret = "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";
-    let region = "us-east-2".parse().unwrap();
-    let credentials: Credentials = Credentials::new(
-        Some(aws_access.to_string()),
-        Some(aws_secret.to_string()),
-        None,
-        None,
-    );
-    let bucket = Bucket::new(bucket_name, region, credentials);
+    let bucket = get_bucket();
     bucket.delete(key).unwrap();
 }

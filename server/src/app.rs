@@ -1,4 +1,5 @@
 use rocket::http::ContentType;
+use rocket::http::Header;
 use rocket::response::Stream;
 use rocket::Data;
 use rocket_contrib::json::Json;
@@ -11,25 +12,62 @@ use crate::buckets;
 use crate::db;
 use crate::tokenize;
 
+#[derive(rocket::response::Responder)]
+struct CORSHeaderJson {
+    data: Json<db::FileStruct>,
+    header: Header<'static>,
+}
+
+#[derive(rocket::response::Responder)]
+struct CORSHeaderStream {
+    data: Stream<Cursor<Vec<u8>>>,
+    cors_header: Header<'static>,
+    content_type_header: Header<'static>,
+    content_disp_header: Header<'static>,
+}
+
 #[rocket::get("/")]
 fn health() -> &'static str {
     "Backend api is up!"
 }
 
 #[rocket::get("/view/<id>")]
-fn view(id: String) -> Json<db::FileStruct> {
+fn view(id: String) -> CORSHeaderJson {
     let res = db::get_file_metadata(&id);
-    Json(res)
+    let header = Header::new("Access-Control-Allow-Origin", "*");
+    CORSHeaderJson {
+        data: Json(res),
+        header: header,
+    }
 }
 
 #[rocket::get("/download/<id>")]
-fn download(id: String) -> Stream<Cursor<Vec<u8>>> {
+fn download(id: String) -> rocket::response::Response<'static> {
+    let metadata = db::get_file_metadata(&id);
     let (data, _) = buckets::get_file(&id);
-    Stream::from(Cursor::new(data))
+
+    let response = rocket::response::Response::build()
+        .status(rocket::http::Status::Ok)
+        .raw_header("Access-Control-Allow-Origin", "*")
+        .raw_header("Access-Control-Request-Headers", "Content-Disposition")
+        .raw_header("Access-Control-Expose-Headers", "Content-Disposition")
+        .header(
+            ContentType::parse_flexible(&metadata.filetype.trim_matches(&['"'] as &[_])).unwrap(),
+        )
+        .raw_header(
+            "Content-Disposition",
+            format!("attachment; filename={}", &metadata.filename),
+        )
+        .streamed_body(Cursor::new(data))
+        .finalize();
+
+    println!("{:?}", response);
+
+    response
 }
 
 #[rocket::post("/create", data = "<data>")]
-fn create(content_type: &ContentType, data: Data) -> Json<db::FileStruct> {
+fn create(content_type: &ContentType, data: Data) -> CORSHeaderJson {
     // Set the form format
     let options = MultipartFormDataOptions::with_multipart_form_data_fields(vec![
         MultipartFormDataField::file("file")
@@ -45,7 +83,7 @@ fn create(content_type: &ContentType, data: Data) -> Json<db::FileStruct> {
 
     // Extracting data
     let file_field = &file.unwrap()[0];
-    let filetype = file_field.content_type.as_ref().unwrap();
+    let filetype = format!("{:?}", file_field.content_type.as_ref().unwrap());
     let filename = file_field.file_name.as_ref().unwrap();
     let a = format!("{:?}", &file_field.path);
     let path = &a[1..a.len() - 1];
@@ -55,9 +93,13 @@ fn create(content_type: &ContentType, data: Data) -> Json<db::FileStruct> {
 
     // Create an id and put file in s3, then db
     let id = tokenize::create_unique_id(30);
-    buckets::put_file(&path, &id, &format!("{:?}", &filetype));
-    let res = db::insert_file(&id, &filename, &notetext);
-    Json(res)
+    buckets::put_file(&path, &id, &filetype);
+    let res = db::insert_file(&id, &filename, &filetype, &notetext);
+    let header = Header::new("Access-Control-Allow-Origin", "*");
+    CORSHeaderJson {
+        data: Json(res),
+        header: header,
+    }
 }
 
 #[rocket::post("/delete/<id>")]
