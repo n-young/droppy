@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../constants/API_URL";
+import { APP_URL } from "../constants/APP_URL";
 const axios = require("axios");
 
 const ViewComponent = props => {
@@ -20,15 +21,27 @@ const ViewComponent = props => {
     };
 
     useEffect(() => {
-        axios.get(`${API_URL}/view/${id}`).then(e => {
-            setFilename(e.data.filename);
-            setNote(e.data.note);
-        });
+        axios
+            .get(`${API_URL}/view/${id}`)
+            .then(e => {
+                console.log("A");
+                setFilename(e.data.filename);
+                setNote(e.data.note);
+            })
+            .catch(e => {
+                setFilename("File not found.");
+            });
     });
 
     return (
         <div className="view">
             <h2>File: {filename}</h2>
+            <h3>
+                Share this link to your file!{" "}
+                <a href={`${APP_URL}/view/${id}`}>
+                    {APP_URL}/view/{id}
+                </a>
+            </h3>
             <br />
             <p>Note: {note}</p>
             <button onClick={handleDownload}>Download {filename}</button>

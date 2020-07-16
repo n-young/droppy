@@ -46,6 +46,7 @@ a {
 
 p {
     margin: 0;
+    font-weight: 300;
 }
 
 hr {
@@ -69,6 +70,10 @@ button {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+button:focus {
+    outline: none;
 }
 
 button:hover {
@@ -111,17 +116,13 @@ div.home form.form {
     flex-direction: column;
 }
 
-div.home form.form > input {
-    margin: 10px 0;
-}
-
 div.view {
     display: flex;
     flex-direction: column;
 }
 
 div.footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -136,4 +137,46 @@ div.footer {
 div.footer p a {
     text-decoration: underline;
     color: var(--white);
+}
+
+label {
+    margin: 0;
+    margin-top: 10px;
+}
+
+label.custom-file {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin: 0;
+    margin-bottom: 20px;
+    box-shadow: 0 0 3px 1px #ccc;
+}
+
+label.custom-file:hover {
+    background-color: #eee;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+input[type="password"],
+input[type="datetime-local"],
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px 10px;
+    box-shadow: 0 0 3px 1px #ccc;
+    margin-bottom: 20px;
+}
+
+input[type="password"],
+input[type="datetime-local"],
+textarea:focus {
+    outline: none;
 }
