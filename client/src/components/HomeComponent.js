@@ -58,7 +58,7 @@ const HomeComponent = props => {
                     />
                 </label>
 
-                <label>Set a password (optional)</label>
+                {/* <label>Set a password (optional)</label>
                 <br />
                 <input
                     type="password"
@@ -67,7 +67,7 @@ const HomeComponent = props => {
                 />
                 <label>Set an expiration date (optional)</label>
                 <br />
-                <input type="datetime-local" id="date" name="date" />
+                <input type="datetime-local" id="date" name="date" /> */}
 
                 <label>Write a note (optional)</label>
                 <br />
