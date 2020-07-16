@@ -1,4 +1,5 @@
 import React from "react";
+import { API_URL } from "../constants/API_URL";
 
 const HomeComponent = props => {
     const handleSubmit = e => {
@@ -9,7 +10,7 @@ const HomeComponent = props => {
         data.append("file", filedata, filedata.name);
         data.append("note", note);
 
-        fetch("http://localhost:8000/create", {
+        fetch(`${API_URL}/create`, {
             method: "POST",
             body: data,
             headers: {

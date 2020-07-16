@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from "../constants/API_URL";
 const axios = require("axios");
 
 const ViewComponent = props => {
@@ -7,7 +8,7 @@ const ViewComponent = props => {
     const [note, setNote] = useState("");
 
     const handleDownload = () => {
-        fetch(`http://localhost:8000/download/${id}`).then(response => {
+        fetch(`${API_URL}/download/${id}`).then(response => {
             response.blob().then(blob => {
                 let url = window.URL.createObjectURL(blob);
                 let a = document.createElement("a");
@@ -19,7 +20,7 @@ const ViewComponent = props => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/view/${id}`).then(e => {
+        axios.get(`${API_URL}/view/${id}`).then(e => {
             setFilename(e.data.filename);
             setNote(e.data.note);
         });

@@ -25,4 +25,4 @@ COPY Cargo.lock Cargo.lock
 COPY src/ src/
 
 RUN cargo build --release
-CMD /app/target/release/email
+CMD /app/target/release/server
