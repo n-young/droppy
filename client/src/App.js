@@ -11,7 +11,7 @@ function App() {
                 <div className="header">
                     <Link to="/">
                         <div className="logoContainer">
-                            <img className="logo" src="/logo-lg.png" />
+                            <img className="logo" src="/logo-lg.png" alt="logo"/>
                             <h1>Droppy</h1>
                         </div>
                     </Link>
@@ -35,7 +35,7 @@ function App() {
                     <a href="https://github.com/n-young/droppy">Source</a>
                 </p>
                 <p>
-                    Designed with ♥️ by <a href="https://n-young">Nick Young</a>{" "}
+                    Designed by <a href="https://n-young">Nick Young</a>{" "}
                     © 2020
                 </p>
             </div>

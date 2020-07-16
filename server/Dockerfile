@@ -23,7 +23,6 @@ COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
 
 COPY src/ src/
-COPY templates/ templates/
 
 RUN cargo build --release
 CMD /app/target/release/email

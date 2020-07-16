@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 const axios = require("axios");
 
 const ViewComponent = props => {
-    const [id, setId] = useState(props.match.params.id);
+    const id = props.match.params.id;
     const [filename, setFilename] = useState("Loading...");
     const [note, setNote] = useState("");
 
