@@ -35,7 +35,7 @@ function App() {
                     <a href="https://github.com/n-young/droppy">Source</a>
                 </p>
                 <p>
-                    Designed by <a href="https://n-young">Nick Young</a>{" "}
+                    Designed by <a href="https://n-young.xyz">Nick Young</a>{" "}
                     © 2020
                 </p>
             </div>
