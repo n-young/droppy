@@ -1,8 +1,8 @@
-# Droppy
+# 📦 Droppy
 
 Author: Nick Young
 
-## Description
+## What is Droppy?
 
 Droppy is an online service that makes file sharing simple again. Simply upload a file, and we generate a unique link to download your file that you can share to others! Moreover, you can password protect your file, set an expiration date, and attach a note to the recipient!
 
